@@ -1,0 +1,161 @@
+---
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .Rmd
+      format_name: rmarkdown
+      format_version: '1.2'
+      jupytext_version: 1.3.1
+  kernelspec:
+    display_name: Python 3
+    language: python
+    name: python3
+---
+
+```{python}
+# Main Configuration
+
+import pandas as pd
+pd.set_option('display.max_rows', None)
+```
+
+```{python}
+mkt = pd.read_excel("cajas_chicas.xlsx", sheet_name =0)
+```
+
+```{python}
+conceptos_mkt = mkt.loc[:, "CONCEPTO"]
+```
+
+```{python}
+frequency_counter = {}
+for concepto in conceptos_mkt:
+    if type(concepto) is str:
+        words = concepto.split()
+        for word in words:
+            if word in frequency_counter:
+                frequency_counter[word] +=1
+            else:
+                frequency_counter[word] =1
+                
+mkt_counter = pd.DataFrame.from_dict(frequency_counter, orient="index")
+mkt_counter = mkt_counter.rename(columns={0: "frequencia"})
+mkt_counter = mkt_counter.sort_values(by=["frequencia"], ascending=False)
+mkt_counter
+```
+
+# MKT
+
+- Articulos para promición
+- Alimentos (Entra en Caja Chica)
+- Anuncios
+- Pasaje, Estacionamientos y Gasolina (Entra en Caja Chica)
+- Renta de Espacios 
+- Mantenimiento de Automóviles (Debería entrar en MKT si son automóviles para uso de dicha área)
+- Video
+- Lonas
+- Material de Limpieza y Mantenimiento (Únicamente considerando aquellos conceptos que no entren en los que corresponden a AyF)
+- Papelería
+- Desarrollo de aplicación
+- Permisos (Únicamente aquellos que estén directamente relacionados con actividades de MKT)
+- Capacitación
+- "Olibonos" (Si se trata de bonos entregados a empleados, puede entrar en Nóminas o en un subconcepto de Nómina).
+
+```{python}
+th = pd.read_excel("cajas_chicas.xlsx", sheet_name =1)
+conceptos_th = th.loc[:,"CONCEPTO"]
+frequency_counter = {}
+for concepto in conceptos_th:
+    if type(concepto) is str:
+        words = concepto.split()
+        for word in words:
+            if word in frequency_counter:
+                frequency_counter[word] +=1
+            else:
+                frequency_counter[word] =1
+                
+th_counter = pd.DataFrame.from_dict(frequency_counter, orient="index")
+th_counter = th_counter.rename(columns={0: "frequencia"})
+th_counter = th_counter.sort_values(by=["frequencia"], ascending=False)
+th_counter
+```
+
+# TH
+
+- Interinato
+- Finiquito
+- Prestamo
+- Apoyo 
+- Bono
+- Rentas de Espacios
+
+Nota: recordar que bonos, finiquitos, préstamos, apoyos y todo concepto relacionado a salarios se contabilizará en el presupuesto de cada una de las áreas.
+
+Nota: **Todo concepto de nóminas debe tener también uno para bonos, finiquitos, perstamos e interinatos. Esta información deberá ser enviada por TH a cada departamento de forma mensual.**
+
+
+
+Ti y AF
+
+```{python}
+ti = pd.read_excel("cajas_chicas.xlsx", sheet_name =2)
+conceptos_ti = ti.loc[:,"CONCEPTO"]
+frequency_counter = {}
+for concepto in conceptos_ti:
+    if type(concepto) is str:
+        words = concepto.split()
+        for word in words:
+            if word in frequency_counter:
+                frequency_counter[word] +=1
+            else:
+                frequency_counter[word] =1
+                
+ti_counter = pd.DataFrame.from_dict(frequency_counter, orient="index")
+ti_counter = ti_counter.rename(columns={0: "frequencia"})
+ti_counter = ti_counter.sort_values(by=["frequencia"], ascending=False)
+ti_counter
+```
+
+# TI
+
+- Proyectores
+- Mantenimiento de Equipo de Cómputo y/o Proyectores ( se recomienda separar en dos conceptos distintos si el monto es alto)
+- Cables
+- Instalación de Equipo de Seguridad
+- Equipo de Cómputo y Tablets
+- Impresoras
+- Equipo de Vigilancia y/o Seguridad
+- Software
+
+```{python}
+ayf = pd.read_excel("cajas_chicas.xlsx", sheet_name =3)
+conceptos_ayf = ayf.loc[:,"CONCEPTO"]
+frequency_counter = {}
+for concepto in conceptos_ayf:
+    if type(concepto) is str:
+        words = concepto.split()
+        for word in words:
+            if word in frequency_counter:
+                frequency_counter[word] +=1
+            else:
+                frequency_counter[word] =1
+                
+ayf_counter = pd.DataFrame.from_dict(frequency_counter, orient="index")
+ayf_counter = ayf_counter.rename(columns={0: "frequencia"})
+ayf_counter = ayf_counter.sort_values(by=["frequencia"], ascending=False)
+ayf_counter
+```
+
+# AyF
+
+- Basura
+- Pasaje, Estacionamientos y Gasolina (entra en Caja Chica)
+- Mantenimiento de Automóviles (Debería entrar en AyF si son automóviles para uso de dicha área)
+- Agua (Como servicio, no como alimento)
+- Papelería
+- Alimentos (Entra en Caja chica)
+- Mantenimiento y Limpieza (podría pasarse al *misc*, que es de todos)
+- Cafetería, cocina (podría pasarse al *misc*, que es de todos)
+- Enfermería (podría pasarse al *misc*, que es de todos)
+- Internet (podría pasarse al *misc*)
+
